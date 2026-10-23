@@ -32,7 +32,7 @@ namespace CalcStudioEPM
         /// The public GitHub repository, e.g. "https://github.com/rlorenzoni/CalcStudio".
         /// Leave empty until it exists; the Issues and Releases links are derived from it.
         /// </summary>
-        public const string RepositoryUrl = "";
+        public const string RepositoryUrl = "https://github.com/rlorenzoni/CalcStudioEPM";
 
         /// <summary>Donation page (GitHub Sponsors, Buy Me a Coffee, PayPal.me …); empty hides it.</summary>
         public const string DonationUrl = "";
@@ -42,8 +42,9 @@ namespace CalcStudioEPM
             "CalcStudio is an independent community project. It is not an Oracle product and is not " +
             "affiliated with, endorsed, sponsored or supported by Oracle Corporation.\r\n\r\n" +
             "It only uses the REST APIs that Oracle EPM Cloud publicly exposes, with your own credentials " +
-            "and the permissions of your EPM account. Nothing is sent anywhere except to the EPM services " +
-            "you configure.\r\n\r\n" +
+            "and the permissions of your EPM account. Your data goes only to the EPM services you " +
+            "configure; the only other request is the optional check for a newer release on GitHub, " +
+            "which sends nothing about you or your work.\r\n\r\n" +
             "Oracle, Hyperion and Essbase are registered trademarks of Oracle and/or its affiliates. " +
             "Other names may be trademarks of their respective owners.";
 

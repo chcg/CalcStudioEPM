@@ -63,6 +63,8 @@ The navigator needs the connection's *Download dimensions and members on Pull* o
 
 All dialogs scale with the Windows display scaling (they are laid out for 100 % and scaled by the size text actually renders at) and can be resized by dragging their edges. Each dialog remembers its last size. The Pull / Deploy / Execute progress window can always be made wider, and taller while the details log or Response box is open, which then takes the extra space.
 
+**Updates:** **About CalcStudio… › Check for updates** asks GitHub for the latest release of this repository. At startup the plugin does the same at most once a day, in the background, and announces each newer release once with a link to its page. The request goes to `api.github.com` and carries nothing about you, your connections or your rules. Turn the startup check off in **Configure… › General**.
+
 ---
 
 ## Prerequisites

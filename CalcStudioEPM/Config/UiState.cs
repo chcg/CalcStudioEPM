@@ -37,6 +37,11 @@ namespace CalcStudioEPM.Config
         public System.Collections.Generic.Dictionary<string, string> PasswordKeep { get; set; } =
             new System.Collections.Generic.Dictionary<string, string>();
 
+        /// <summary>When the startup update check last reached GitHub (UTC).</summary>
+        public DateTime LastUpdateCheckUtc { get; set; }
+        /// <summary>The newer release the startup check last announced, so each is announced once.</summary>
+        public string UpdateNotifiedVersion { get; set; }
+
         private static string FilePath => Path.Combine(ConfigManager.SettingsDir, "ui_state.json");
 
         public static UiState Load()

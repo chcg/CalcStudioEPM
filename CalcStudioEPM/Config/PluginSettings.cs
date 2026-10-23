@@ -25,6 +25,9 @@ namespace CalcStudioEPM.Config
         /// <summary>Autocomplete in Groovy rules: EPM API members after a dot, rtps. prompts.</summary>
         public bool AutoCompleteGroovy { get; set; } = true;
 
+        /// <summary>At startup (at most once a day) ask GitHub whether a newer release exists.</summary>
+        public bool CheckForUpdates { get; set; } = true;
+
         private static string FilePath => Path.Combine(ConfigManager.SettingsDir, "settings.json");
 
         private static PluginSettings _current;

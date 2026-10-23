@@ -17,6 +17,8 @@ namespace CalcStudioEPM.Forms
         private const int Inner     = FormWidth - 2 * Pad;
 
         private int _y = Pad;
+        private Label  _updateStatus;
+        private Button _btnUpdate;
 
         public AboutForm()
         {
@@ -65,9 +67,23 @@ namespace CalcStudioEPM.Forms
             _y += 22;
             AddText(AboutInfo.Copyright + ".  " + AboutInfo.ThirdParty, small, SystemColors.GrayText);
 
+            if (UpdateCheck.Available)
+            {
+                _y += 6;
+                _updateStatus = new Label { Location = new Point(Pad, _y), Size = new Size(Inner, 20) };
+                Controls.Add(_updateStatus);
+                _y += 22;
+            }
+
             _y += 8;
             var copy = new Button { Text = "Copy version info", Location = new Point(Pad, _y), Size = new Size(140, 28) };
             copy.Click += (s, e) => CopyVersionInfo();
+            if (UpdateCheck.Available)
+            {
+                _btnUpdate = new Button { Text = "Check for updates", Location = new Point(Pad + 148, _y), Size = new Size(140, 28) };
+                _btnUpdate.Click += OnCheckForUpdates;
+                Controls.Add(_btnUpdate);
+            }
             var close = new Button
             {
                 Text = "Close", Location = new Point(FormWidth - Pad - 90, _y), Size = new Size(90, 28),
@@ -131,9 +147,39 @@ namespace CalcStudioEPM.Forms
             Controls.Add(link);
         }
 
-        /// <summary>Opens an http(s) link in the default browser. The links are our own constants;
-        /// the scheme check keeps anything else from being handed to the shell.</summary>
-        private static void OpenUrl(string url)
+        private async void OnCheckForUpdates(object sender, EventArgs e)
+        {
+            _btnUpdate.Enabled = false;
+            _updateStatus.ForeColor = SystemColors.GrayText;
+            _updateStatus.Text = "Checking GitHub for a newer version…";
+
+            UpdateCheck.Result r = await UpdateCheck.CheckAsync();   // resumes on the UI thread
+            if (IsDisposed) return;
+            _btnUpdate.Enabled = true;
+
+            if (r.Error != null)
+            {
+                _updateStatus.ForeColor = Color.FromArgb(0xB0, 0x00, 0x00);
+                _updateStatus.Text = r.Error;
+            }
+            else if (!r.IsNewer)
+            {
+                _updateStatus.ForeColor = Color.FromArgb(0x10, 0x7C, 0x10);
+                _updateStatus.Text = $"You have the latest version ({AboutInfo.Version}).";
+            }
+            else
+            {
+                _updateStatus.ForeColor = SystemColors.ControlText;
+                _updateStatus.Text = $"Version {r.LatestVersion} is available (you have {AboutInfo.Version}).";
+                if (MessageBox.Show(this, $"{AboutInfo.ProductName} {r.LatestVersion} is available.\n\nOpen its release page to download it?",
+                        Text, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                    OpenUrl(r.ReleaseUrl);
+            }
+        }
+
+        /// <summary>Opens an http(s) link in the default browser. The links are our own constants
+        /// or our repository's release pages; the scheme check keeps anything else from the shell.</summary>
+        internal static void OpenUrl(string url)
         {
             if (!Uri.TryCreate(url, UriKind.Absolute, out Uri uri) ||
                 (uri.Scheme != Uri.UriSchemeHttps && uri.Scheme != Uri.UriSchemeHttp))

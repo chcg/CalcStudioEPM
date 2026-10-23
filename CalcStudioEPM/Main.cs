@@ -163,6 +163,65 @@ namespace CalcStudioEPM
             UpdateDeployAvailability();
 
             WarnIfLegacyCopyInstalled();
+            CheckForUpdatesInBackground();
+        }
+
+        /// <summary>
+        /// Asks GitHub for a newer release, at most once a day and off the UI thread; Notepad++
+        /// starts as usual whatever the answer. Each newer version is announced once. Off in
+        /// Configure… › General.
+        /// </summary>
+        private static void CheckForUpdatesInBackground()
+        {
+            try
+            {
+                if (!PluginSettings.Current.CheckForUpdates || !UpdateCheck.Available) return;
+                if (UiState.Load().LastUpdateCheckUtc > DateTime.UtcNow.AddDays(-1)) return;
+
+                // A window of our own on the UI thread, to hand the answer back to it
+                var marshal = new Control();
+                IntPtr unused = marshal.Handle;
+
+                Task.Run(() => UpdateCheck.CheckAsync()).ContinueWith(t =>
+                {
+                    UpdateCheck.Result r = t.Status == TaskStatus.RanToCompletion ? t.Result : null;
+                    try
+                    {
+                        marshal.BeginInvoke(new Action(() =>
+                        {
+                            try { OnBackgroundUpdateCheck(r); }
+                            catch (Exception ex) { PluginLog("Update check: " + ex.Message); }
+                            finally { marshal.Dispose(); }
+                        }));
+                    }
+                    catch { /* Notepad++ is closing */ }
+                });
+            }
+            catch (Exception ex) { PluginLog("Update check: " + ex.Message); }
+        }
+
+        private static void OnBackgroundUpdateCheck(UpdateCheck.Result r)
+        {
+            if (r == null || r.Error != null)
+            {
+                PluginLog("Update check: " + (r?.Error ?? "failed"));   // tried again at the next start
+                return;
+            }
+
+            UiState ui = UiState.Load();
+            ui.LastUpdateCheckUtc = DateTime.UtcNow;
+            bool announce = r.IsNewer && r.LatestVersion != ui.UpdateNotifiedVersion;
+            if (announce) ui.UpdateNotifiedVersion = r.LatestVersion;
+            ui.Save();
+            PluginLog($"Update check: latest release {r.LatestVersion}, this is {BuildInfo.Version}");
+
+            if (announce &&
+                MessageBox.Show(NppOwner,
+                    $"{PluginName} {r.LatestVersion} is available (you have {BuildInfo.Version}).\n\n" +
+                    "Open its release page to download it?\n\n" +
+                    "This check runs at most once a day; turn it off in Configure… › General.",
+                    PluginName, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes)
+                AboutForm.OpenUrl(r.ReleaseUrl);
         }
 
         /// <summary>

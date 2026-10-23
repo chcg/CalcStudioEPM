@@ -40,7 +40,7 @@ namespace CalcStudioEPM.Forms
         // General
         private Label _lblPrompts, _lblSorts, _lblPending, _lblSizes, _lblNotice;
         // Language / editor
-        private CheckBox _chkInstallLanguage, _chkHandleComments, _chkAutoCalc, _chkAutoGroovy;
+        private CheckBox _chkInstallLanguage, _chkHandleComments, _chkAutoCalc, _chkAutoGroovy, _chkCheckUpdates;
         private Label    _lblLanguageStatus, _lblOtherLanguages;
         // Connections / helpers
         private ListView _lvConnections, _lvHelpers;
@@ -151,8 +151,8 @@ namespace CalcStudioEPM.Forms
         private TabPage GeneralPage()
         {
             TabPage page = Page("General");
-            var stack = Stack(7);
-            for (int i = 0; i < 6; i++) stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            var stack = Stack(9);
+            for (int i = 0; i < 8; i++) stack.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             stack.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
 
             stack.Controls.Add(Heading("Settings files"), 0, 0);
@@ -174,7 +174,15 @@ namespace CalcStudioEPM.Forms
             stack.Controls.Add(_chkAutoCalc, 0, 3);
             stack.Controls.Add(_chkAutoGroovy, 0, 4);
 
-            stack.Controls.Add(Heading("Data CalcStudio remembers"), 0, 5);
+            stack.Controls.Add(Heading("Updates"), 0, 5);
+            _chkCheckUpdates = new CheckBox
+            {
+                Text = "At startup, check GitHub for a newer release (at most once a day; About › Check for updates checks now)",
+                AutoSize = true, Margin = new Padding(0, 2, 0, 2), Enabled = UpdateCheck.Available,
+            };
+            stack.Controls.Add(_chkCheckUpdates, 0, 6);
+
+            stack.Controls.Add(Heading("Data CalcStudio remembers"), 0, 7);
             var grid = new TableLayoutPanel { Dock = DockStyle.Top, AutoSize = true, ColumnCount = 2 };
             grid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
             grid.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
@@ -205,7 +213,7 @@ namespace CalcStudioEPM.Forms
             {
                 var ui = UiState.Load(); ui.LocalValidationNoticeDismissed = false; ui.LocalValidationNoticeCount = 0; ui.Save();
             });
-            stack.Controls.Add(grid, 0, 6);
+            stack.Controls.Add(grid, 0, 8);
             page.Controls.Add(stack);
             return page;
         }
@@ -608,6 +616,7 @@ namespace CalcStudioEPM.Forms
             _chkHandleComments.Checked  = _settings.HandleCalcScriptComments;
             _chkAutoCalc.Checked        = _settings.AutoCompleteCalcScript;
             _chkAutoGroovy.Checked      = _settings.AutoCompleteGroovy;
+            _chkCheckUpdates.Checked    = _settings.CheckForUpdates;
 
             _catalog = CalcScriptCatalog.Load();
             ShowCatalog(_catalog);
@@ -700,6 +709,7 @@ namespace CalcStudioEPM.Forms
             _settings.HandleCalcScriptComments  = _chkHandleComments.Checked;
             _settings.AutoCompleteCalcScript    = _chkAutoCalc.Checked;
             _settings.AutoCompleteGroovy        = _chkAutoGroovy.Checked;
+            _settings.CheckForUpdates           = _chkCheckUpdates.Checked;
 
             try
             {
