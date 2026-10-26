@@ -14,8 +14,8 @@ set "exec=%~3" & set "wdir=%~4"
 set "mgrFile=%exec%"
 set "tmapFile=..\maps\%mgrFile%.bat.map.targets"
 
-:: NOTE: 1.8.0 managed via vsSolutionBuildEvent.bat
-set exec=%mgrFile% -tests "ManagerKeyTests.targets" -pkg-link "..\..\DllExport.1.8.0.nupkg"
+:: NOTE: 1.8.1 managed via vsSolutionBuildEvent.bat
+set exec=%mgrFile% -tests "ManagerKeyTests.targets" -pkg-link "..\..\DllExport.1.8.1.nupkg"
 
 
 :::::::::::::::::: :::::::::::::: :::::::::::::::::::::::::

@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
     <OutputType>Library</OutputType>
@@ -12,7 +11,6 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
-
   <!-- ─── Version ───────────────────────────────────────────────────────────── -->
   <!--
     ReleaseVersion is the only thing to change for a new release (keep three digits
@@ -28,7 +26,6 @@
     <ReleaseVersion>0.015</ReleaseVersion>
     <BuildNumberFile>$(MSBuildProjectDirectory)\BuildNumber.txt</BuildNumberFile>
   </PropertyGroup>
-
   <Target Name="StampBuildVersion" BeforeTargets="CoreCompile" Condition="'$(DesignTimeBuild)' != 'true'">
     <PropertyGroup>
       <_LastBuild Condition="Exists('$(BuildNumberFile)')">$([System.IO.File]::ReadAllText('$(BuildNumberFile)').Trim())</_LastBuild>
@@ -59,12 +56,10 @@
     </ItemGroup>
     <Message Importance="high" Text="CalcStudioEPM version $(_DisplayVersion) (file version $(_FileVersion))" />
   </Target>
-
   <!-- The number is kept only once the code compiled, so a failed build doesn't use one up -->
   <Target Name="SaveBuildNumber" AfterTargets="CoreCompile" Condition="'$(DesignTimeBuild)' != 'true' And '$(BuildNumber)' != ''">
     <WriteLinesToFile File="$(BuildNumberFile)" Lines="$(BuildNumber)" Overwrite="true" />
   </Target>
-
   <!-- ─── DllExport build-time IL-weaving configuration ───────────────────── -->
   <!--
     DllExportNamespace = System.Runtime.InteropServices matches the gcache stub
@@ -84,12 +79,10 @@
     <DllExportMetaLibFullPath>$(MSBuildProjectDirectory)\packages\DllExport.1.8.0\gcache\metalib\System.Runtime.InteropServices\DllExport.dll</DllExportMetaLibFullPath>
     <DllExportTypeRefOptions>0</DllExportTypeRefOptions>
   </PropertyGroup>
-
   <!-- ─── NuGet packages ──────────────────────────────────────────────────── -->
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
-
   <!-- ─── Framework references needed by net48 ────────────────────────────── -->
   <ItemGroup>
     <!-- HttpClient / HttpRequestMessage / HttpResponseMessage -->
@@ -101,7 +94,6 @@
     <!-- ZipFile.ExtractToDirectory / ZipFile.CreateFromDirectory -->
     <Reference Include="System.IO.Compression.FileSystem" />
   </ItemGroup>
-
   <!-- ─── DllExport compile-time attribute stub (gcache) ──────────────────── -->
   <!--
     References the hand-compiled gcache stub so the C# compiler can see
@@ -116,7 +108,6 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-
   <!-- ─── Exclude packages\ folder from SDK auto-globbing ─────────────────── -->
   <!--
     Prevents every DLL in packages\ from appearing as a CandidateAssemblyFile,
@@ -127,17 +118,12 @@
     <!-- EPM Groovy API signatures for Groovy autocomplete, compiled from Oracle's reference -->
     <EmbeddedResource Include="Resources\groovy_api.json" LogicalName="CalcStudioEPM.groovy_api.json" />
   </ItemGroup>
-
   <ItemGroup>
-    <None    Remove="packages\**\*" />
+    <None Remove="packages\**\*" />
     <Content Remove="packages\**\*" />
     <Compile Remove="packages\**\*.cs" />
   </ItemGroup>
-
   <!--
     Import the DllExport MSBuild targets that drive post-build IL weaving.
   -->
-  <Import Condition="Exists('$(MSBuildProjectDirectory)\packages\DllExport.1.8.0\tools\net.r_eg.DllExport.targets')"
-          Project="$(MSBuildProjectDirectory)\packages\DllExport.1.8.0\tools\net.r_eg.DllExport.targets" />
-
 </Project>

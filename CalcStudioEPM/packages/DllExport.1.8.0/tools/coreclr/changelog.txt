@@ -1,6 +1,25 @@
 3F's IL Assembler / coreclr - https://github.com/3F/coreclr
 - - - - - - - - - - - - - - - 
 
+[9.4.0] 2025.06.06
+
+    * NEW: Native PDB (MSF) support in disassembler.
+           Part of https://github.com/3F/DllExport/issues/23
+    
+    * NEW: Portable PDB (BSJB) support in disassembler.
+           Part of https://github.com/3F/DllExport/issues/23
+    
+    * FIXED: Fixed priorities for custom definitions when relinking with (... at '') <- (... assert) in `.typeref`.
+    
+    * FIXED: Fixed possible incorrect behaviour for all predefined 'assert' definitions in `.typeref` directives.
+    
+    * CHANGED: Restore the `.line` directives for Windows platform
+               https://github.com/3F/coreclr/issues/3
+    
+    * NOTE: Symbols (PDB) are available through GitHub Releases:
+            https://github.com/3F/coreclr/releases
+    
+
 [9.3.0] 2025.02.23
 
     * NEW: Extended default types binding for the rebase option.

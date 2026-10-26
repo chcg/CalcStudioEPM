@@ -6,19 +6,19 @@
 [![Release](https://img.shields.io/github/release/3F/DllExport.svg)](https://github.com/3F/DllExport/releases/latest)
 [![License](https://img.shields.io/badge/License-MIT-74A5C2.svg)](https://github.com/3F/DllExport/blob/master/LICENSE.txt)
 
-[`DllExport`](https://3F.github.io/DllExport/releases/latest/manager/)`-action Configure` [[?](#how-to-get-dllexport)]
+[`DllExport`](https://3F.github.io/DllExport/releases/latest/manager/)`-help` | [`gnt`](https://github.com/3F/GetNuTool)`DllExport`
 
 ```csharp
 [DllExport("Init", CallingConvention.Cdecl)]
-// __cdecl is the default calling convention
 [DllExport(CallingConvention.StdCall)]
+// Cdecl is the default calling convention in .NET DllExport
 [DllExport("MyFunc")]
 [DllExport]
 ```
 
 Based on *UnmanagedExports* that was created by Robert Giesecke. His [page](https://sites.google.com/site/robertgiesecke/Home/uploads/unmanagedexports).
 
-***.NET DllExport*** is a different [unrelated project](https://github.com/3F/DllExport/issues/87#issuecomment-438576100) that was developed by Denis Kuzmin [ 「 ❤ 」 ](https://3F.github.io/fund)
+***[.NET DllExport](https://github.com/3F/DllExport)*** is a [different project](https://github.com/3F/DllExport/issues/87#issuecomment-438576100) that was developed by Denis Kuzmin [ 「 ☕ 」 ](https://3F.github.io/fund)
 
 ```
 Copyright (c) 2009-2015  Robert Giesecke
@@ -26,27 +26,12 @@ Copyright (c) 2016-2025  Denis Kuzmin <x-3F@outlook.com> github/3F
 ```
 
 > [ ***[Quick start](https://github.com/3F/DllExport/wiki/Quick-start)*** ] [ [Examples: C++, C#, Java, ...](https://github.com/3F/DllExport/wiki/Examples) ] 
-> -> { **[Wiki](https://github.com/3F/DllExport/wiki)** } { [🧪 Demo src](https://github.com/3F/Examples/tree/master/DllExport/BasicExport) }
+> -> { **[Wiki](https://github.com/3F/DllExport/wiki)** } { [🧪 Demo](https://github.com/3F/Examples/tree/master/DllExport/BasicExport) }
 
-[![](https://github.com/3F/DllExport/blob/9a4bc5143b0b0ab6aca7cfc1abe3f6da9644ecd9/Resources/img/DllExport.png?raw=true)](https://3F.github.io/DllExport/releases/latest/manager/)
+[![](https://github.com/3F/DllExport/blob/33e5cb6da7ac5dd5abf452dc682c00b5bbc53c2b/Resources/img/DllExport.png?raw=true)](https://3F.github.io/DllExport/releases/latest/manager/)
 [![](https://github.com/3F/DllExport/blob/36d452268c1f69b5c8dd5e22cc106c71ac76a82c/Resources/img/screencast_Complex_types.jpg?raw=true)](https://www.youtube.com/watch?v=QXMj9-8XJnY)
 
-For Lua, consider using [LuNari](https://github.com/3F/LuNari)
-
-```csharp
-[DllExport]
-public static int entrypoint(IntPtr L)
-{
-    using Lua<ILua53> lua = new("Lua.dll");
-    ...
-    lua.pushcclosure(L, onProc, 0);
-    lua.setglobal(L, "onKeyDown");
-    LuaNumber num = lua.tonumber<LuaNumber>(L, 7);
-    ...
-}
-```
-
-For working with **unmanaged** memory including native or binary data from the heap and binding between .NET and unmanaged native C/C++ etc, try [Conari](https://github.com/3F/Conari) (Wiki. [**Quick-start**](https://github.com/3F/Conari/wiki/Quick-start))
+Example of using DllExport + [Conari](https://github.com/3F/Conari/wiki/Quick-start):
 
 [`[⏯]`](https://github.com/3F/DllExport/blob/master/src/DllExport/assets/NetfxAsset/Basic.cs)
 
@@ -78,9 +63,22 @@ IntPtr ptr = l.callme<IntPtr>(ns, nstruct);
 using NativeArray<int> nr = new(4, ptr); // (nstruct.Data.x == 8) != (nr[1] == 7)
 ```
 
-*.NET DllExport* supports both Library (**.dll**) and Executable (**.exe**) PE modules.
+For Lua, consider using [LuNari](https://github.com/3F/LuNari)
 
-`[⏯]` See also demo project here: https://github.com/3F/Examples/tree/master/DllExport/BasicExport
+```csharp
+[DllExport]
+public static int entrypoint(IntPtr L)
+{
+    using Lua<ILua53> lua = new("Lua.dll");
+    ...
+    lua.pushcclosure(L, onProc, 0);
+    lua.setglobal(L, "onKeyDown");
+    LuaNumber num = lua.tonumber<LuaNumber>(L, 7);
+    ...
+}
+```
+
+*.NET DllExport* supports both Library (**.dll**) and Executable (**.exe**) PE modules.
 
 ## How does it work
 
@@ -124,16 +122,15 @@ Read also my brief explanations here: [AssemblyRef encoding](https://github.com/
 
 ## How to get DllExport
 
-[**Put this inside solution folder, then click it there**](https://3f.github.io/DllExport/releases/latest/manager/)
+[Does DllExport support NuGet ?](https://github.com/3F/DllExport/wiki/DllExport-Manager-Q-A#does-dllexport-support-nuget-somehow-)
 
-Since 1.6+ does not provide official support for NuGet [[?](https://github.com/3F/DllExport/wiki/DllExport-Manager-Q-A)], something somewhere may not work or not work properly.
+> Most likely *yes*. But NuGet features are **not guaranteed** (tl;dr something may not work or not work properly)
 
-In any case you need [DllExport.bat](https://3f.github.io/DllExport/releases/latest/manager/) (~20 KB) inside your solution folder. Read [Wiki. Quick-start](https://github.com/3F/DllExport/wiki/Quick-start)
+Use directly *latest stable* [DllExport.bat](https://3F.github.io/DllExport/releases/latest/manager/) (~28 KB). Read [Wiki](https://github.com/3F/DllExport/wiki/Quick-start)
 
-You can get it from any *trusted* places:
-* [GitHub Releases](https://github.com/3F/DllExport/releases/latest). Alias to latest stable manager: https://3F.github.io/DllExport/releases/latest/manager/
-* [![NuGet package](https://img.shields.io/nuget/v/DllExport.svg)](https://www.nuget.org/packages/DllExport/) Visual Studio Package Manager can still distribute and activate *DllExport.bat* for solution folder in most default setup cases.
-* You can also use [embeddable package manager *GetNuTool*](https://github.com/3F/GetNuTool) to reach a remote *DllExport.bat* or .nupkg package.
+* Get it from [GitHub Releases](https://github.com/3F/DllExport/releases/latest). Or link to latest stable: https://3F.github.io/DllExport/releases/latest/manager/
+* Or from [![NuGet package](https://img.shields.io/nuget/v/DllExport.svg)](https://www.nuget.org/packages/DllExport/) Visual Studio Package Manager can still distribute and activate *DllExport.bat* for solution folder in most default setup cases.
+* Or use [embeddable package manager *GetNuTool*](https://github.com/3F/GetNuTool)
 
 Read [ **[Documentation](https://github.com/3F/DllExport/wiki/DllExport-Manager)** ]
 
@@ -178,6 +175,5 @@ Alternatively you can get official compiled versions via [![NuGet](https://img.s
 Or like:
 
 ```batch
-:: ILAsm/9.3.0
 .tools\gnt ILAsm & .\build Release
 ```

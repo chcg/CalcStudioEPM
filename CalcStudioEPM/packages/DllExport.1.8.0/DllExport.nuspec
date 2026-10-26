@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>DllExport</id>
-    <version>1.8.0</version>
+    <version>1.8.1</version>
     <title>.NET DllExport</title>
     <authors>github.com/3F/DllExport</authors>
     <license type="file">LICENSE.txt</license>
@@ -22,19 +22,19 @@
               https://github.com/3F/DllExport/tree/master/src/DllExport/UnitedTest
 
         ===
-        DllExport -dxp-version 1.8.0
+        DllExport -dxp-version 1.8.1
         https://3F.github.io/DllExport/releases/latest/manager/
 
         ===
-        gnt DllExport/1.8.0
+        gnt DllExport/1.8.1
         https://github.com/3F/GetNuTool
 
   
-    .NET DllExport 1.8.0+f4deb0e    
+    .NET DllExport 1.8.1+c2d3cd1    
     
     Configuration:  PublicRelease    
     Release type:       
-    Build number:   17264    
+    Build number:   36569    
     toolset:        net40    
     MetaCor:        netstandard1.1    
     MetaLib:        net20    
